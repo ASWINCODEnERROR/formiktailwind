@@ -89,7 +89,7 @@ const Otpform = () => {
               <div>{renderInput()}</div>
             </Formik>
             {formik.errors.otp && (
-              <p classname="mt-3 text-sm text-red-500">fill the fields properly</p>
+              <p className="mt-3 text-sm text-red-500">fill the fields properly</p>
             )}
             <button
               type="button"

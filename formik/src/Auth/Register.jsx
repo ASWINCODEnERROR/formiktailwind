@@ -1,120 +1,137 @@
-import React from "react";
-import { useFormik } from "formik";
+import React, { useState } from "react";
+import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-// import { JSON} from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-
-
 
 const SignupFormschema = Yup.object({
   email: Yup.string()
     .email("Please correct your email")
     .required("Email is required"),
   password: Yup.string()
-    .min(8, "password must have 8 charrr..")
-    .matches(/[a-zA-Z]/, "passwrord must contain letters")
-    .matches(/\d/, "password must contain numbers.")
+    .min(8, "Password must have 8 characters")
+    .matches(/[a-zA-Z]/, "Password must contain letters")
+    .matches(/\d/, "Password must contain numbers.")
     .required("Password is required"),
   confirmPassword: Yup.string()
-    .oneOf([Yup.ref("password"), null], "password  missmatch")
-    .required("confirm password is requied."),
+    .oneOf([Yup.ref("password"), null], "Password mismatch")
+    .required("Confirm password is required."),
 });
 
 const Register = () => {
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
-    const navigate = useNavigate();
-
-  const formik = useFormik({
-    initialValues: {
-      email: "",
-      password: "",
-      confirmPassword: "",
-    },
-    validationSchema: SignupFormschema,
-    onSubmit: (values) => {
-        navigate('/otpform');
-      console.log(values);
-      alert(JSON.stringify(values, null, 2));
-    },
-  });
   return (
-    <form
-      onSubmit={formik.handleSubmit}
-      className="border max-w-md p-5 mt-20 mx-auto rounded shadow-md"
+    <Formik
+      initialValues={{
+        email: "",
+        password: "",
+        confirmPassword: "",
+      }}
+      validationSchema={SignupFormschema}
+      onSubmit={(values) => {
+        setLoading(true);
+        setTimeout(() => {
+          console.log(values);
+          alert(JSON.stringify(values, null, 2));
+          navigate("/otpform");
+          resetForm();
+          setLoading(false);
+        }, 2000);
+      }}
     >
-      <div className="container">
-        <h1 className="font-bold">Signup</h1>
-        <div className="mb-4 m-3">
-          <div>
-            <label className="block font-normal">Email</label>
-          </div>
-          <div>
-            <input
+      {({ resetForm }) => (
+        <Form className="border max-w-md p-5 mt-20 mx-auto rounded shadow-md">
+          <h1 className="font-bold">Signup</h1>
+
+          <div className="mb-4 m-3">
+            <label className="block font-normal" htmlFor="email">
+              Email
+            </label>
+            <Field
               type="email"
               id="email"
               name="email"
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              value={formik.values.email}
               className="border block p-2 mt-1 w-full bg-white text-black"
             />
-            {formik.touched.email && formik.errors.email && (
-              <p className="text-red-500 text-sm">{formik.errors.email}</p>
-            )}
+            <ErrorMessage
+              name="email"
+              component="p"
+              className="text-red-500 text-sm"
+            />
           </div>
-        </div>
 
-        <div className="mb-4 m-3">
-          <div>
-            <label className="block font-normal">Password: </label>
-          </div>
-          <div>
-            <input
+          <div className="mb-4 m-3">
+            <label className="block font-normal" htmlFor="password">
+              Password
+            </label>
+            <Field
               type="password"
               id="password"
               name="password"
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              value={formik.values.password}
               className="border block p-2 mt-1 w-full bg-white text-black"
             />
-            {formik.touched.password && formik.errors.password && (
-              <p className="text-red-500 text-sm">{formik.errors.password}</p>
-            )}
+            <ErrorMessage
+              name="password"
+              component="p"
+              className="text-red-500 text-sm"
+            />
           </div>
-        </div>
-        <div className="mb-4 m-3">
-          <div>
-            <label className="block font-normal">Confirm Password:</label>
-          </div>
-          <div>
-            <input
-              type="confirmPassword"
+
+          <div className="mb-4 m-3">
+            <label className="block font-normal" htmlFor="confirmPassword">
+              Confirm Password
+            </label>
+            <Field
+              type="password"
               id="confirmPassword"
               name="confirmPassword"
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              value={formik.values.confirmPassword}
               className="border block p-2 mt-1 w-full bg-white text-black"
             />
-            {formik.touched.confirmPassword &&
-              formik.errors.confirmPassword && (
-                <p className="text-red-500 text-sm">
-                  {formik.errors.confirmPassword}
-                </p>
-              )}
+            <ErrorMessage
+              name="confirmPassword"
+              component="p"
+              className="text-red-500 text-sm"
+            />
           </div>
-        </div>
-        <div className="mb-4">
-          <button
-            type="submit"
-            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-          >
-            Sign Up
-          </button>
-        </div>
-      </div>
-    </form>
+
+          <div className="mb-4 ">
+            <button
+              type="submit"
+              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              disabled={loading}
+            >
+              {loading ? (
+                <span className="flex items-center justify-center">
+                  <svg
+                    className="w-5 h-5 mr-3 animate-spin text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M4 12a8 8 0 018-8v3a5 5 0 00-5 5H4z" />
+                  </svg>
+                  Loading...
+                </span>
+              ) : (
+                "Sign up"
+              )}
+            </button>
+            <button
+              type="button"
+              onClick={() => resetForm()}
+              className="bg-gray-500 text-white ml-2 px-4 py-2 rounded hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2"
+            >
+              Reset
+            </button>
+          </div>
+        </Form>
+      )}
+    </Formik>
   );
 };
 

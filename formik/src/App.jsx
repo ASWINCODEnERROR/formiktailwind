@@ -5,6 +5,7 @@ import Otpform from "./Otp/Otpform.jsx";
 import "./App.css";
 import Loginn from "./Auth/Loginn.jsx";
 import Register from "./Auth/Register.jsx";
+import Home from "./Home/Home.jsx";
 
 const App = () => {
   return (
@@ -14,6 +15,7 @@ const App = () => {
         <Route path="/otpform" element={<Otpform />} />
         <Route path="/loginpg" element={<Loginn />} />
         <Route path="/reg" element={<Register />} />
+        <Route path="/home" element={<Home />} />
       </Routes>
       
     </Router>
